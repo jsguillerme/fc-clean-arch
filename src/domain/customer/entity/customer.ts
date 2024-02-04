@@ -1,17 +1,23 @@
+import Entity from "../../@shared/entity/entity.abstract";
+import NotificationError from "../../@shared/notification/notification.error";
 import Address from "../object-values/address";
 
-export default class Customer {
+export default class Customer extends Entity {
 
-  private _id: string;
   private _name: string = "";
   private _address!: Address;
   private _active: boolean = true;
   private _rewardPoints: number = 0;
 
   constructor(id: string, name: string) {
+    super();
     this._id = id;
     this._name = name;
     this.validate();
+
+    if(this.notification.hasErrors()) {
+      throw new NotificationError(this.notification.errors());
+    }
   }
 
   get name() {
@@ -39,12 +45,18 @@ export default class Customer {
   }
 
   validate() {
-    if(this._id.length < 1) {
-      throw new Error("Id cannot be empty");
+    if(this._id.length === 0) {
+      this.notification.addError({
+        context: 'Customer',
+        message: 'ID cannot be empty'
+      });
     }
 
-    if (this._name.length < 1) {
-      throw new Error("Name cannot be empty");
+    if (this._name.length === 0) {
+      this.notification.addError({
+        context: 'Customer',
+        message: 'Name cannot be empty'
+      });
     }
   }
 
