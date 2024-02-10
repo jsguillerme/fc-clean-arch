@@ -1,5 +1,6 @@
 import Entity from "../../@shared/entity/entity.abstract";
 import NotificationError from "../../@shared/notification/notification.error";
+import CustomerValidatorFactory from "../factories/customer.validator.factory";
 import Address from "../object-values/address";
 
 export default class Customer extends Entity {
@@ -45,19 +46,9 @@ export default class Customer extends Entity {
   }
 
   validate() {
-    if(this._id.length === 0) {
-      this.notification.addError({
-        context: 'Customer',
-        message: 'ID cannot be empty'
-      });
-    }
-
-    if (this._name.length === 0) {
-      this.notification.addError({
-        context: 'Customer',
-        message: 'Name cannot be empty'
-      });
-    }
+    CustomerValidatorFactory
+      .create()
+      .validate(this);
   }
 
   activate() {
